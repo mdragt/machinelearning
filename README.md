@@ -17,19 +17,25 @@ This report describes:
 + Results of prediction model predicting 20 different test cases. 
 
 ### Reproducibility
-Load libraries and set seed
+Load libraries and set seed before the creation of different models
 
 ### Getting the data
 Load the training and test set
 
-### Cleaning the data
-Inspect the data. Remove unnecessary columns. Remove columns with NAs. Optionally, remove highly correlated variables
+### Cleaning and preparing the data
+#### Inspect the data
 
-### Preproccesing of the variables
+#### Remove unnecessary columns 
 
-### Remove the near zero variables
+#### Remove columns with NAs
 
-### Create cross validation set
+#### Remove highly correlated variables
+
+#### Preproccesing of the variables
+
+#### Remove the near zero variables
+
+#### Create cross validation set
 
 ### Train Model 1: Random Forest
 
