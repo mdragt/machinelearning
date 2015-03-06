@@ -92,7 +92,9 @@ Highly correlated variables can sometimes reduce the performance of a model, and
     plot( levelplot(cor.check, 
                     main ="Correlation matrix for all WLE features in training set",
                     scales=list(x=list(rot=90), cex=1.0),))
-    
+                    
+![Correlation Matrix](/Images/CorMatrix.jpeg)
+
     # find the highly correlated variables
     highly.cor <- findCorrelation(cor(data[, -c(last)]), cutoff=0.9)
     
@@ -157,8 +159,12 @@ First we plot the Out-Of-Bag (OOB) error-rate. Besides, we will investigate the 
     plot(c(0,1),type="n", axes=F, xlab="", ylab="")
     legend("top", colnames(wle.rf$err.rate),col=1:6,cex=0.8,fill=1:6)
 
+![Out of bag error rate](/Images/OOB.jpeg)
+
     # plot the accuracy and Gini
     varImpPlot(wle.rf, main="Mean Decrease of Accuracy and Gini per variable")
+
+![Accuracy and Gini scores](/Images/AccuracyGini.jpeg)
     
     # MDSplot (we couldn't execute this due to lack of memory)
     MDSplot(wle.rf, training$classe)
@@ -246,6 +252,8 @@ Here we use Model 1 to predict both the training as the testing set. With the te
     
     # fancyRpartPlot works for small trees, but not for ours
     fancyRpartPlot(dt)
+
+![Decision Tree Plot](/Images/fancyPlot.jpeg)
     
 ### Accuracy Model 2 on training set and cross validation set
 As we can see, this model is not improving the performance, having an accuracy of 0.6989. Therefor, we will continue with model 1.
