@@ -31,8 +31,7 @@
     <!-- MAIN CONTENT -->
     <div id="main_content_wrap" class="outer">
       <section id="main_content" class="inner">
-        <h1>
-<a id="qualitative-activity-recognition-of-weight-lifting-exercises" class="anchor" href="#qualitative-activity-recognition-of-weight-lifting-exercises" aria-hidden="true"><span class="octicon octicon-link"></span></a>Qualitative Activity Recognition of Weight Lifting Exercises</h1>
+        <p>``# Qualitative Activity Recognition of Weight Lifting Exercises</p>
 
 <h2>
 <a id="background" class="anchor" href="#background" aria-hidden="true"><span class="octicon octicon-link"></span></a>Background</h2>
@@ -148,7 +147,7 @@ plot( levelplot(cor.check,
                 scales=list(x=list(rot=90), cex=1.0),))
 </code></pre>
 
-<p><img src="/Images/CorMatrix.jpeg" alt="Correlation Matrix"></p>
+<p><img src="/images/CorMatrix.jpeg" alt="Correlation Matrix"></p>
 
 <pre><code># find the highly correlated variables
 highly.cor &lt;- findCorrelation(cor(data[, -c(last)]), cutoff=0.9)
@@ -225,13 +224,13 @@ plot(c(0,1),type="n", axes=F, xlab="", ylab="")
 legend("top", colnames(wle.rf$err.rate),col=1:6,cex=0.8,fill=1:6)
 </code></pre>
 
-<p><img src="/Images/OOB.jpeg" alt="Out of bag error rate"></p>
+<p><img src="/images/OOB.jpeg" alt="Out of bag error rate"></p>
 
 <pre><code># plot the accuracy and Gini
 varImpPlot(wle.rf, main="Mean Decrease of Accuracy and Gini per variable")
 </code></pre>
 
-<p><img src="/Images/AccuracyGini.jpeg" alt="Accuracy and Gini scores"></p>
+<p><img src="/images/AccuracyGini.jpeg" alt="Accuracy and Gini scores"></p>
 
 <pre><code># MDSplot (we couldn't execute this due to lack of memory)
 MDSplot(wle.rf, training$classe)
@@ -325,7 +324,7 @@ dt &lt;- rpart(classe ~ ., data=training, method="class")
 fancyRpartPlot(dt)
 </code></pre>
 
-<p><img src="/Images/fancyPlot.jpeg" alt="Decision Tree Plot"></p>
+<p><img src="/images/fancyPlot.jpeg" alt="Decision Tree Plot"></p>
 
 <h3>
 <a id="accuracy-model-2-on-training-set-and-cross-validation-set" class="anchor" href="#accuracy-model-2-on-training-set-and-cross-validation-set" aria-hidden="true"><span class="octicon octicon-link"></span></a>Accuracy Model 2 on training set and cross validation set</h3>
