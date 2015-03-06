@@ -164,7 +164,7 @@ First we plot the Out-Of-Bag (OOB) error-rate. Besides, we will investigate the 
     MDSplot(wle.rf, training$classe)
 
 ### Accuracy Model 1 on training set and cross validation set
-Here we use Model 1 to predict both the training as the testing set. With the test set, we obtain an accuracy of 0.9951, which seems to be acceptable.
+Here we use Model 1 to predict both the training as the testing set. With the test set, we obtain an accuracy of 0.9951, which seems to be acceptable. However, we will also test the Decision Tree model.
 
     # results with training set
     predict1 <- predict(wle.rf, newdata=training)
@@ -241,9 +241,69 @@ Here we use Model 1 to predict both the training as the testing set. With the te
     
 ### Train Model 2: Decision Tree
 
+    # Model 2: Decision Tree
+    dt <- rpart(classe ~ ., data=training, method="class")
+    
+    # fancyRpartPlot works for small trees, but not for ours
+    fancyRpartPlot(dt)
+    
 ### Accuracy Model 2 on training set and cross validation set
+As we can see, this model is not improving the performance, having an accuracy of 0.6989. Therefor, we will continue with model 1.
 
+    # cross validation
+    predictDT <- predict(dt, testing, type = "class")
+    confusionMatrix(predictDT, testing$classe)
+    
+    # Confusion Matrix and Statistics
 
+    #               Reference
+    #  Prediction    A    B    C    D    E
+    #           A 1506  190   51   67   49
+    #           B   53  616   59   92  184
+    #           C   44  199  867  180  242
+    #           D   67  114   46  616   99
+    #           E    4   20    3    9  508
+
+    # Overall Statistics
+                                         
+    #             Accuracy : 0.6989         
+    #               95% CI : (0.687, 0.7106)
+    #  No Information Rate : 0.2845         
+    #  P-Value [Acc > NIR] : < 2.2e-16      
+                                         
+    #                Kappa : 0.618          
+    # Mcnemar's Test P-Value : < 2.2e-16      
+
+    # Statistics by Class:
+
+    #                      Class: A Class: B Class: C Class: D Class: E
+    # Sensitivity            0.8996   0.5408   0.8450   0.6390  0.46950
+    # Specificity            0.9152   0.9182   0.8631   0.9338  0.99250
+    # Pos Pred Value         0.8084   0.6135   0.5659   0.6539  0.93382
+    # Neg Pred Value         0.9582   0.8928   0.9635   0.9296  0.89253
+    # Prevalence             0.2845   0.1935   0.1743   0.1638  0.18386
+    # Detection Rate         0.2559   0.1047   0.1473   0.1047  0.08632
+    # Detection Prevalence   0.3166   0.1706   0.2603   0.1601  0.09244
+    # Balanced Accuracy      0.9074   0.7295   0.8541   0.7864  0.73100
+    
+
+### Results
+Finally, as the Random Forest model gave us the best result, we will apply that to our validation set and create the documents to submit.
+
+    # Predict the class of the validation set
+    answer<-predict(wle.rf,valPrep)
+    answer
+    
+    # code as suggested by Coursera
+    pml_write_files = function(x){
+        n = length(x)
+        for(i in 1:n){
+            filename = paste0("problem_id_",i,".txt")
+            write.table(x[i],file=filename,quote=FALSE,row.names=FALSE,col.names=FALSE)
+        }
+    }
+    
+    pml_write_files(answer)
 
 ## Data 
 The training data for this project are available here: https://d396qusza40orc.cloudfront.net/predmachlearn/pml-training.csv
