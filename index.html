@@ -122,7 +122,7 @@ validation &lt;- validation[,-seq(1:7)]
 This reduces de amount of predictors to 53</p>
 
 <pre><code># select columns that don't have NAs
-indexNA&lt;-as.vector(sapply(data[,1:152],function(x) {length(which(is.na(x)))!=0}))
+indexNA &lt;- as.vector(sapply(data[,1:152],function(x) {length(which(is.na(x)))!=0}))
 data &lt;- data[,!indexNA]
 validation &lt;- validation[,!indexNA]
 </code></pre>
