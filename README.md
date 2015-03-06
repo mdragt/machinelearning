@@ -8,13 +8,40 @@ Using devices such as Jawbone Up, Nike FuelBand, and Fitbit it is now possible t
 
 The goal of this project of the Coursera Practical Machine Learning course is to predict the manner in which people did the exercise. This is the "classe" variable in the training set.
 
-## Content to be delivered
-a report describing:
+## Report
+This report describes:
 + how this model is built; 
 + how cross validation is used;
 + what the expected out of sample error is;
 + justification of the made choices;
 + Results of prediction model predicting 20 different test cases. 
+
+### Reproducibility
+Load libraries and set seed
+
+### Getting the data
+Load the training and test set
+
+### Cleaning the data
+Inspect the data. Remove unnecessary columns. Remove columns with NAs. Optionally, remove highly correlated variables
+
+### Preproccesing of the variables
+
+### Remove the near zero variables
+
+### Create cross validation set
+
+### Train Model 1: Random Forest
+
+### Results of Model 1
+
+
+### Accuracy Model 1 on training set and cross validation set
+
+### Train Model 2: Decision Tree
+
+### Accuracy Model 2 on training set and cross validation set
+
 
 
 ## Data 
