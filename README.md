@@ -5,11 +5,11 @@ Using devices such as Jawbone Up, Nike FuelBand, and Fitbit it is now possible t
 
 In this project, we will use data from accelerometers on the belt, forearm, arm, and dumbell of 6 participants. They were asked to perform barbell lifts correctly and incorrectly in 5 different ways:
 
-Class A: exactly according to the specification
-Class B: throwing the elbows to the front
-Class C: lifting the dumbbell only halfway
-Class D: lowering the dumbbell only halfway
-Class E: throwing the hips to the front
++ Class A: exactly according to the specification
++ Class B: throwing the elbows to the front
++ Class C: lifting the dumbbell only halfway
++ Class D: lowering the dumbbell only halfway
++ Class E: throwing the hips to the front
 
 More information is available from the website here: http://groupware.les.inf.puc-rio.br/har (see the section on the Weight Lifting Exercise Dataset).
 
