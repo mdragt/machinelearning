@@ -69,7 +69,7 @@ We notice that the first columns don't contain usefull data and that there are m
 This reduces de amount of predictors to 53
 
     # select columns that don't have NAs
-    indexNA<-as.vector(sapply(data[,1:152],function(x) {length(which(is.na(x)))!=0}))
+    indexNA <- as.vector(sapply(data[,1:152],function(x) {length(which(is.na(x)))!=0}))
     data <- data[,!indexNA]
     validation <- validation[,!indexNA]
 
