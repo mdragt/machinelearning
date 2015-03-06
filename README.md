@@ -101,7 +101,7 @@ Highly correlated variables can sometimes reduce the performance of a model, and
     validation <- validation[, -highly.cor]
 
 **Preproccesing of the variables**
-The amount of predictors is now 46. We will continue with the preproccing of these predictors, by centering and scaling them
+The amount of predictors is now 46. We will continue with the preproccing of these predictors, by centering and scaling them. Remember that the last column of the validation set contained the problem_id.
 
     # pre process variables
     preObj <-preProcess(data[,1:prior],method=c('knnImpute', 'center', 'scale'))
@@ -111,21 +111,134 @@ The amount of predictors is now 46. We will continue with the preproccing of the
     valPrep <-predict(preObj,validation[,1:prior])
     valPrep$problem_id <- validation$problem_id
 
+**Remove the near zero variables**
+Near zero variables have less prediction value, so we remove them. Although in this case, there are none to be elimnated.
 
-#### Remove the near zero variables
+    # test near zero variance
+    myDataNZV <- nearZeroVar(dataPrep, saveMetrics=TRUE)
+    if (any(myDataNZV$nzv)) nzv else message("No variables with near zero variance")
+    dataPrep <- dataPrep[,myDataNZV$nzv==FALSE]
+    valPrep <- valPrep[,myDataNZV$nzv==FALSE]
 
-#### Create cross validation set
+### Create a cross validation set
+To train and test the model, we create a training and a testing set.
+
+    # split dataset into training and test set
+    inTrain <- createDataPartition(y=dataPrep$classe, p=0.7, list=FALSE )
+    training <- dataPrep[inTrain,]
+    testing <- dataPrep[-inTrain,]
 
 ### Train Model 1: Random Forest
-Set seed. Calculate optimal mtry.
+Regarding the data, we will expect Decision Tree and Random Forest to give the best results. We start with Random Forest. First we set a seed to make this project reproducable. We will use the tuneRF function to calculate the optimal mtry and use that in the random forest function.
+   
+    # set seed for reproducibility
+    set.seed(12345)
+
+    # get the best mtry
+    bestmtry <- tuneRF(training[-last],training$classe, ntreeTry=100, 
+                       stepFactor=1.5,improve=0.01, trace=TRUE, plot=TRUE, dobest=FALSE)
+    
+    mtry <- bestmtry[as.numeric(which.min(bestmtry[,"OOBError"])),"mtry"]
+  
+    # Model 1: RandomForest
+    wle.rf <-randomForest(classe~.,data=training, mtry=mtry, ntree=501, 
+                          keep.forest=TRUE, proximity=TRUE, 
+                          importance=TRUE,test=testing)
+    
 
 ### Results of Model 1
-Plot OOB. Plot accuracy and Gini.
+First we plot the Out-Of-Bag (OOB) error-rate. Besides, we will investigate the mean decrease of both accuracy and Gini score. As we can see it was correct to use 501 trees. 
 
+    # plot the Out of bag error estimates
+    layout(matrix(c(1,2),nrow=1), width=c(4,1)) 
+    par(mar=c(5,4,4,0)) #No margin on the right side
+    plot(wle.rf, log="y", main ="Out-of-bag (OOB) error estimate per Number of Trees")
+    par(mar=c(5,0,4,2)) #No margin on the left side
+    plot(c(0,1),type="n", axes=F, xlab="", ylab="")
+    legend("top", colnames(wle.rf$err.rate),col=1:6,cex=0.8,fill=1:6)
 
+    # plot the accuracy and Gini
+    varImpPlot(wle.rf, main="Mean Decrease of Accuracy and Gini per variable")
+    
+    # MDSplot (we couldn't execute this due to lack of memory)
+    MDSplot(wle.rf, training$classe)
 
 ### Accuracy Model 1 on training set and cross validation set
+Here we use Model 1 to predict both the training as the testing set. With the test set, we obtain an accuracy of 0.9951, which seems to be acceptable.
 
+    # results with training set
+    predict1 <- predict(wle.rf, newdata=training)
+    confusionMatrix(predict1,training$classe)
+    
+    Confusion Matrix and Statistics
+
+    #              Reference
+    # Prediction    A    B    C    D    E
+    #          A 3906    0    0    0    0
+    #          B    0 2658    0    0    0
+    #          C    0    0 2396    0    0
+    #          D    0    0    0 2252    0
+    #          E    0    0    0    0 2525
+    
+    # Overall Statistics
+                                     
+    #            Accuracy : 1          
+    #              95% CI : (0.9997, 1)
+    # No Information Rate : 0.2843     
+    # P-Value [Acc > NIR] : < 2.2e-16  
+                                     
+    #               Kappa : 1          
+    # Mcnemar's Test P-Value : NA         
+
+    # Statistics by Class:
+
+    #                      Class: A Class: B Class: C Class: D Class: E
+    # Sensitivity            1.0000   1.0000   1.0000   1.0000   1.0000
+    # Specificity            1.0000   1.0000   1.0000   1.0000   1.0000
+    # Pos Pred Value         1.0000   1.0000   1.0000   1.0000   1.0000
+    # Neg Pred Value         1.0000   1.0000   1.0000   1.0000   1.0000
+    # Prevalence             0.2843   0.1935   0.1744   0.1639   0.1838
+    # Detection Rate         0.2843   0.1935   0.1744   0.1639   0.1838
+    # Detection Prevalence   0.2843   0.1935   0.1744   0.1639   0.1838
+    # Balanced Accuracy      1.0000   1.0000   1.0000   1.0000   1.0000
+
+    # results with test set
+    predict2 <- predict(wle.rf, newdata=testing)
+    confusionMatrix(predict2,testing$classe)
+    
+    # Confusion Matrix and Statistics
+
+    #               Reference
+    # Prediction    A    B    C    D    E
+    #         A 1671    2    0    0    0
+    #         B    2 1134   11    0    0
+    #         C    0    3 1015    9    0
+    #         D    0    0    0  954    0
+    #         E    1    0    0    1 1082
+
+    # Overall Statistics
+                                          
+    #             Accuracy : 0.9951          
+    #               95% CI : (0.9929, 0.9967)
+    #  No Information Rate : 0.2845          
+    #  P-Value [Acc > NIR] : < 2.2e-16       
+                                          
+    #                Kappa : 0.9938          
+    #  Mcnemar's Test P-Value : NA              
+
+    # Statistics by Class:
+
+    #                      Class: A Class: B Class: C Class: D Class: E
+    # Sensitivity            0.9982   0.9956   0.9893   0.9896   1.0000
+    # Specificity            0.9995   0.9973   0.9975   1.0000   0.9996
+    # Pos Pred Value         0.9988   0.9887   0.9883   1.0000   0.9982
+    # Neg Pred Value         0.9993   0.9989   0.9977   0.9980   1.0000
+    # Prevalence             0.2845   0.1935   0.1743   0.1638   0.1839
+    # Detection Rate         0.2839   0.1927   0.1725   0.1621   0.1839
+    # Detection Prevalence   0.2843   0.1949   0.1745   0.1621   0.1842
+    # Balanced Accuracy      0.9989   0.9964   0.9934   0.9948   0.9998
+
+    
 ### Train Model 2: Decision Tree
 
 ### Accuracy Model 2 on training set and cross validation set
