@@ -38,8 +38,11 @@ Load the training and test set
 #### Create cross validation set
 
 ### Train Model 1: Random Forest
+Set seed. Calculate optimal mtry.
 
 ### Results of Model 1
+Plot OOB. Plot accuracy and Gini.
+
 
 
 ### Accuracy Model 1 on training set and cross validation set
